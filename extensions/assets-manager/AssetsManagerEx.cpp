@@ -615,6 +615,7 @@ void AssetsManagerEx::startUpdate()
         }
         else
         {
+            bool hasDownloadFiles=false;
             // Generate download units for all assets that need to be updated or added
             std::string packageUrl = _remoteManifest->getPackageUrl();
             for (auto it = diff_map.begin(); it != diff_map.end(); ++it)
@@ -627,6 +628,7 @@ void AssetsManagerEx::startUpdate()
                 }
                 else
                 {
+                    hasDownloadFiles=true;
                     std::string path = diff.asset.path;
                     // Create path
                     _fileUtils->createDirectory(basename(_storagePath + path));
@@ -654,6 +656,9 @@ void AssetsManagerEx::startUpdate()
             
             std::string msg = StringUtils::format("Start to update %d files from remote package.", _totalToDownload);
             dispatchUpdateEvent(EventAssetsManagerEx::EventCode::UPDATE_PROGRESSION, "", msg);
+            if(hasDownloadFiles==false){
+               updateSucceed();
+            }
         }
     }
 }
